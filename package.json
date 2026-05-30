@@ -1,0 +1,13 @@
+{
+  "name": "en-dict-practice",
+  "version": "1.0.0",
+  "description": "Telegram English dictation practice bot",
+  "type": "module",
+  "scripts": {
+    "start": "node src/bot.js",
+    "check": "node --check src/bot.js && node --check src/scoring.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

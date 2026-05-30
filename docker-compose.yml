@@ -1,0 +1,8 @@
+services:
+  en-dict-practice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    restart: unless-stopped
