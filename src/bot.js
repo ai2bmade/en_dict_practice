@@ -12,7 +12,9 @@ if (!token) {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, "..");
-const content = JSON.parse(readFileSync(join(rootDir, "content", "sentences.json"), "utf8"));
+const content = JSON.parse(
+  readFileSync(join(rootDir, "content", "sentences.json"), "utf8").replace(/^\uFEFF/, "")
+);
 const apiBase = `https://api.telegram.org/bot${token}`;
 const sessions = new Map();
 
