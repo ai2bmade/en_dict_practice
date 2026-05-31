@@ -120,16 +120,23 @@ async function showStart(chatId) {
 async function showLevelSamples(chatId) {
   await sendMessage(chatId, "Listen to the three samples, then choose your level.", levelKeyboard());
   for (const sample of content.samples) {
-    await sendMessage(chatId, `${capitalize(sample.level)} sample`);
+    await sendMessage(chatId, `${levelNumber(sample.level)}. ${capitalize(sample.level)} sample`);
     await sendAudioForSentence(chatId, sample);
   }
-  await sendMessage(chatId, "Choose your level.", levelKeyboard());
+  await sendMessage(chatId, "Choose your level. Send 1, 2, or 3.", levelKeyboard());
 }
 
 async function chooseLevel(chatId, level) {
   const session = getSession(chatId);
   session.level = level;
-  await sendMessage(chatId, `Great. Your level is set to ${capitalize(level)}.`, mainKeyboard());
+  await sendMessage(
+    chatId,
+    [
+      `Great. Your level is set to ${capitalize(level)}.`,
+      `We are going to practice ${capitalize(level)} level sentences.`
+    ].join("\n"),
+    mainKeyboard()
+  );
   await sendNextSentence(chatId);
 }
 
@@ -186,7 +193,7 @@ async function handleSubmission(chatId, text) {
     [
       `Score: ${result.score}%`,
       "",
-      "Try again, or reveal the answer."
+      "Listen and try again, or see the answer and continue to the next sentence."
     ].join("\n"),
     answerKeyboard()
   );
@@ -252,9 +259,9 @@ async function handleMessage(message) {
     return;
   }
 
-  if (text === "Beginner") return chooseLevel(chatId, "beginner");
-  if (text === "Intermediate") return chooseLevel(chatId, "intermediate");
-  if (text === "Advanced") return chooseLevel(chatId, "advanced");
+  if (text === "1" || text === "1. Beginner" || text === "Beginner") return chooseLevel(chatId, "beginner");
+  if (text === "2" || text === "2. Intermediate" || text === "Intermediate") return chooseLevel(chatId, "intermediate");
+  if (text === "3" || text === "3. Advanced" || text === "Advanced") return chooseLevel(chatId, "advanced");
 
   if (command === "/dictation" || command === "/today" || text === "Next Sentence") {
     await sendNextSentence(chatId);
@@ -306,7 +313,7 @@ function answerKeyboard() {
 function levelKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["Beginner", "Intermediate", "Advanced"], ["Status"]],
+      keyboard: [["1. Beginner"], ["2. Intermediate"], ["3. Advanced"], ["Status"]],
       resize_keyboard: true
     }
   };
@@ -314,6 +321,10 @@ function levelKeyboard() {
 
 function capitalize(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function levelNumber(level) {
+  return { beginner: 1, intermediate: 2, advanced: 3 }[level] ?? "";
 }
 
 async function poll(offset) {

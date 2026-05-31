@@ -53,7 +53,7 @@ $sampleDefinitions = @(
     id = "bgn_000001"
     level = "beginner"
     source = "samples\BGN_sample.mp3"
-    answer = "Several packages arrived this morning."
+    answer = "The bus arrived early this morning."
   },
   [ordered]@{
     id = "int_000001"
