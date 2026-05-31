@@ -26,6 +26,7 @@ function getSession(chatId) {
       pendingAnswer: null,
       lastScore: null,
       completedIds: new Set(),
+      completedScores: [],
       freeUsed: 0
     });
   }
@@ -182,6 +183,7 @@ async function handleSubmission(chatId, text) {
 
   if (result.score >= 100) {
     session.completedIds.add(session.current.id);
+    session.completedScores.push(100);
     session.current = null;
     await sendMessage(chatId, "Perfect. You ranked #1 for this sentence today.", mainKeyboard());
     await sendNextSentence(chatId);
@@ -209,6 +211,7 @@ async function revealAnswer(chatId) {
   const score = session.lastScore ?? 0;
   const ranking = rankingForScore(score);
   session.completedIds.add(session.current.id);
+  session.completedScores.push(score);
 
   await sendMessage(
     chatId,
@@ -235,7 +238,7 @@ async function sendStatus(chatId) {
       "Status",
       `Level: ${session.level ? capitalize(session.level) : "Not selected"}`,
       `Completed: ${session.completedIds.size}`,
-      `Current score: ${session.lastScore ?? "-"}`
+      `Average score: ${averageScoreText(session)}`
     ].join("\n"),
     mainKeyboard()
   );
@@ -325,6 +328,15 @@ function capitalize(value) {
 
 function levelNumber(level) {
   return { beginner: 1, intermediate: 2, advanced: 3 }[level] ?? "";
+}
+
+function averageScoreText(session) {
+  if (session.completedScores.length === 0) {
+    return "No completed sentences yet";
+  }
+
+  const total = session.completedScores.reduce((sum, score) => sum + score, 0);
+  return `${Math.round(total / session.completedScores.length)}%`;
 }
 
 async function poll(offset) {
