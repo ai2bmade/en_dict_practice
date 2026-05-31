@@ -82,10 +82,13 @@ async function sendAudioForSentence(chatId, sentence) {
   }
 
   const audioBytes = readFileSync(audioPath);
+  const isMp3 = sentence.audio.toLowerCase().endsWith(".mp3");
+  const extension = isMp3 ? "mp3" : "ogg";
+  const contentType = isMp3 ? "audio/mpeg" : "audio/ogg";
   const form = new FormData();
   form.append("chat_id", String(chatId));
   form.append("title", `Sentence ${label}`);
-  form.append("audio", new Blob([audioBytes], { type: "audio/ogg" }), `${sentence.id}.ogg`);
+  form.append("audio", new Blob([audioBytes], { type: contentType }), `${sentence.id}.${extension}`);
 
   const response = await fetch(`${apiBase}/sendAudio`, {
     method: "POST",

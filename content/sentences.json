@@ -1,114 +1,384 @@
-{
-  "samples": [
-    {
-      "id": "bgn_000001",
-      "level": "beginner",
-      "answer": "Several packages arrived this morning.",
-      "audio": "audio/public/bgn_000001.ogg"
-    },
-    {
-      "id": "int_000001",
-      "level": "intermediate",
-      "answer": "Several applicants were asked to submit references.",
-      "audio": "audio/public/int_000001.ogg"
-    },
-    {
-      "id": "adv_000001",
-      "level": "advanced",
-      "answer": "Despite weak demand, copper prices could recover by July.",
-      "audio": "audio/public/adv_000001.ogg"
-    }
-  ],
-  "sentences": [
-    {
-      "id": "bgn_000002",
-      "level": "beginner",
-      "answer": "A supervisor approved the new schedule.",
-      "audio": "audio/public/bgn_000002.ogg"
-    },
-    {
-      "id": "bgn_000003",
-      "level": "beginner",
-      "answer": "Several packages arrived this morning.",
-      "audio": "audio/public/bgn_000003.ogg"
-    },
-    {
-      "id": "bgn_000004",
-      "level": "beginner",
-      "answer": "Several screens froze during the presentation.",
-      "audio": "audio/public/bgn_000004.ogg"
-    },
-    {
-      "id": "bgn_000005",
-      "level": "beginner",
-      "answer": "One client canceled the afternoon call.",
-      "audio": "audio/public/bgn_000005.ogg"
-    },
-    {
-      "id": "bgn_000006",
-      "level": "beginner",
-      "answer": "Their train left five minutes early.",
-      "audio": "audio/public/bgn_000006.ogg"
-    },
-    {
-      "id": "int_000002",
-      "level": "intermediate",
-      "answer": "A budget proposal was rejected after review.",
-      "audio": "audio/public/int_000002.ogg"
-    },
-    {
-      "id": "int_000003",
-      "level": "intermediate",
-      "answer": "Committee members could postpone the final decision.",
-      "audio": "audio/public/int_000003.ogg"
-    },
-    {
-      "id": "int_000004",
-      "level": "intermediate",
-      "answer": "New regulations may affect international students.",
-      "audio": "audio/public/int_000004.ogg"
-    },
-    {
-      "id": "int_000005",
-      "level": "intermediate",
-      "answer": "One supervisor had the analyst revise the summary.",
-      "audio": "audio/public/int_000005.ogg"
-    },
-    {
-      "id": "int_000006",
-      "level": "intermediate",
-      "answer": "Recent software updates caused several accounts to freeze.",
-      "audio": "audio/public/int_000006.ogg"
-    },
-    {
-      "id": "adv_000002",
-      "level": "advanced",
-      "answer": "Monetary authorities may postpone easing amid stubborn inflation.",
-      "audio": "audio/public/adv_000002.ogg"
-    },
-    {
-      "id": "adv_000003",
-      "level": "advanced",
-      "answer": "Rumor has it that antitrust regulators may defer the acquisition.",
-      "audio": "audio/public/adv_000003.ogg"
-    },
-    {
-      "id": "adv_000004",
-      "level": "advanced",
-      "answer": "Subtle packaging revisions boosted repeat purchases significantly.",
-      "audio": "audio/public/adv_000004.ogg"
-    },
-    {
-      "id": "adv_000005",
-      "level": "advanced",
-      "answer": "Trade officials downgraded forecasts after export orders contracted.",
-      "audio": "audio/public/adv_000005.ogg"
-    },
-    {
-      "id": "adv_000006",
-      "level": "advanced",
-      "answer": "It is believed that methane leaks accelerated regional warming.",
-      "audio": "audio/public/adv_000006.ogg"
-    }
-  ]
+﻿{
+    "samples":  [
+                    {
+                        "id":  "bgn_000001",
+                        "level":  "beginner",
+                        "answer":  "Several packages arrived this morning.",
+                        "audio":  "audio/public/bgn_000001.ogg"
+                    },
+                    {
+                        "id":  "int_000001",
+                        "level":  "intermediate",
+                        "answer":  "Several applicants were asked to submit references.",
+                        "audio":  "audio/public/int_000001.ogg"
+                    },
+                    {
+                        "id":  "adv_000001",
+                        "level":  "advanced",
+                        "answer":  "Despite weak demand, copper prices could recover by July.",
+                        "audio":  "audio/public/adv_000001.ogg"
+                    }
+                ],
+    "sentences":  [
+                      {
+                          "id":  "bgn_000002",
+                          "level":  "beginner",
+                          "answer":  "A delivery driver missed the entrance.",
+                          "audio":  "audio/public/bgn_000002.ogg"
+                      },
+                      {
+                          "id":  "bgn_000003",
+                          "level":  "beginner",
+                          "answer":  "A meeting started ten minutes late.",
+                          "audio":  "audio/public/bgn_000003.ogg"
+                      },
+                      {
+                          "id":  "bgn_000004",
+                          "level":  "beginner",
+                          "answer":  "A payment app declined the card.",
+                          "audio":  "audio/public/bgn_000004.ogg"
+                      },
+                      {
+                          "id":  "bgn_000005",
+                          "level":  "beginner",
+                          "answer":  "A professor extended the paper deadline.",
+                          "audio":  "audio/public/bgn_000005.ogg"
+                      },
+                      {
+                          "id":  "bgn_000006",
+                          "level":  "beginner",
+                          "answer":  "A supervisor approved the new schedule.",
+                          "audio":  "audio/public/bgn_000006.ogg"
+                      },
+                      {
+                          "id":  "bgn_000007",
+                          "level":  "beginner",
+                          "answer":  "Front desk staff confirmed the request.",
+                          "audio":  "audio/public/bgn_000007.ogg"
+                      },
+                      {
+                          "id":  "bgn_000008",
+                          "level":  "beginner",
+                          "answer":  "Mobile users reported login problems.",
+                          "audio":  "audio/public/bgn_000008.ogg"
+                      },
+                      {
+                          "id":  "bgn_000009",
+                          "level":  "beginner",
+                          "answer":  "Most stores accepted online payments.",
+                          "audio":  "audio/public/bgn_000009.ogg"
+                      },
+                      {
+                          "id":  "bgn_000010",
+                          "level":  "beginner",
+                          "answer":  "My doctor reviewed the test results.",
+                          "audio":  "audio/public/bgn_000010.ogg"
+                      },
+                      {
+                          "id":  "bgn_000011",
+                          "level":  "beginner",
+                          "answer":  "Nearby offices reopened after the storm.",
+                          "audio":  "audio/public/bgn_000011.ogg"
+                      },
+                      {
+                          "id":  "bgn_000012",
+                          "level":  "beginner",
+                          "answer":  "One client canceled the afternoon call.",
+                          "audio":  "audio/public/bgn_000012.ogg"
+                      },
+                      {
+                          "id":  "bgn_000013",
+                          "level":  "beginner",
+                          "answer":  "One customer left a short message.",
+                          "audio":  "audio/public/bgn_000013.ogg"
+                      },
+                      {
+                          "id":  "bgn_000014",
+                          "level":  "beginner",
+                          "answer":  "Our team finished the final report.",
+                          "audio":  "audio/public/bgn_000014.ogg"
+                      },
+                      {
+                          "id":  "bgn_000015",
+                          "level":  "beginner",
+                          "answer":  "Several screens froze during the presentation.",
+                          "audio":  "audio/public/bgn_000015.ogg"
+                      },
+                      {
+                          "id":  "bgn_000016",
+                          "level":  "beginner",
+                          "answer":  "That app recorded the wrong location.",
+                          "audio":  "audio/public/bgn_000016.ogg"
+                      },
+                      {
+                          "id":  "bgn_000017",
+                          "level":  "beginner",
+                          "answer":  "The cafe changed its weekend hours.",
+                          "audio":  "audio/public/bgn_000017.ogg"
+                      },
+                      {
+                          "id":  "bgn_000018",
+                          "level":  "beginner",
+                          "answer":  "The school posted the new schedule.",
+                          "audio":  "audio/public/bgn_000018.ogg"
+                      },
+                      {
+                          "id":  "bgn_000019",
+                          "level":  "beginner",
+                          "answer":  "Their flight landed ahead of schedule.",
+                          "audio":  "audio/public/bgn_000019.ogg"
+                      },
+                      {
+                          "id":  "bgn_000020",
+                          "level":  "beginner",
+                          "answer":  "Their train left five minutes early.",
+                          "audio":  "audio/public/bgn_000020.ogg"
+                      },
+                      {
+                          "id":  "bgn_000021",
+                          "level":  "beginner",
+                          "answer":  "This system deleted the old files.",
+                          "audio":  "audio/public/bgn_000021.ogg"
+                      },
+                      {
+                          "id":  "int_000002",
+                          "level":  "intermediate",
+                          "answer":  "A budget proposal was rejected after review.",
+                          "audio":  "audio/public/int_000002.ogg"
+                      },
+                      {
+                          "id":  "int_000003",
+                          "level":  "intermediate",
+                          "answer":  "A manager had the technician inspect the equipment.",
+                          "audio":  "audio/public/int_000003.ogg"
+                      },
+                      {
+                          "id":  "int_000004",
+                          "level":  "intermediate",
+                          "answer":  "A professor made the group defend its conclusion.",
+                          "audio":  "audio/public/int_000004.ogg"
+                      },
+                      {
+                          "id":  "int_000005",
+                          "level":  "intermediate",
+                          "answer":  "An editor let the writer revise the introduction.",
+                          "audio":  "audio/public/int_000005.ogg"
+                      },
+                      {
+                          "id":  "int_000006",
+                          "level":  "intermediate",
+                          "answer":  "An outside consultant made the team reconsider its strategy.",
+                          "audio":  "audio/public/int_000006.ogg"
+                      },
+                      {
+                          "id":  "int_000007",
+                          "level":  "intermediate",
+                          "answer":  "Committee members could postpone the final decision.",
+                          "audio":  "audio/public/int_000007.ogg"
+                      },
+                      {
+                          "id":  "int_000008",
+                          "level":  "intermediate",
+                          "answer":  "Delayed shipments forced several stores to cancel orders.",
+                          "audio":  "audio/public/int_000008.ogg"
+                      },
+                      {
+                          "id":  "int_000009",
+                          "level":  "intermediate",
+                          "answer":  "Each department should reduce unnecessary expenses.",
+                          "audio":  "audio/public/int_000009.ogg"
+                      },
+                      {
+                          "id":  "int_000010",
+                          "level":  "intermediate",
+                          "answer":  "Every proposal should include a detailed timeline.",
+                          "audio":  "audio/public/int_000010.ogg"
+                      },
+                      {
+                          "id":  "int_000011",
+                          "level":  "intermediate",
+                          "answer":  "Financial reports might influence next year\u0027s funding.",
+                          "audio":  "audio/public/int_000011.ogg"
+                      },
+                      {
+                          "id":  "int_000012",
+                          "level":  "intermediate",
+                          "answer":  "Hospital staff allowed visitors to enter after noon.",
+                          "audio":  "audio/public/int_000012.ogg"
+                      },
+                      {
+                          "id":  "int_000013",
+                          "level":  "intermediate",
+                          "answer":  "Large companies must address customer complaints quickly.",
+                          "audio":  "audio/public/int_000013.ogg"
+                      },
+                      {
+                          "id":  "int_000014",
+                          "level":  "intermediate",
+                          "answer":  "New regulations may affect international students.",
+                          "audio":  "audio/public/int_000014.ogg"
+                      },
+                      {
+                          "id":  "int_000015",
+                          "level":  "intermediate",
+                          "answer":  "One supervisor had the analyst revise the summary.",
+                          "audio":  "audio/public/int_000015.ogg"
+                      },
+                      {
+                          "id":  "int_000016",
+                          "level":  "intermediate",
+                          "answer":  "One witness was asked to describe the incident.",
+                          "audio":  "audio/public/int_000016.ogg"
+                      },
+                      {
+                          "id":  "int_000017",
+                          "level":  "intermediate",
+                          "answer":  "Recent software updates caused several accounts to freeze.",
+                          "audio":  "audio/public/int_000017.ogg"
+                      },
+                      {
+                          "id":  "int_000018",
+                          "level":  "intermediate",
+                          "answer":  "Research data was stored on a private server.",
+                          "audio":  "audio/public/int_000018.ogg"
+                      },
+                      {
+                          "id":  "int_000019",
+                          "level":  "intermediate",
+                          "answer":  "Revised schedules were posted without explanation.",
+                          "audio":  "audio/public/int_000019.ogg"
+                      },
+                      {
+                          "id":  "int_000020",
+                          "level":  "intermediate",
+                          "answer":  "Security systems failed during the inspection.",
+                          "audio":  "audio/public/int_000020.ogg"
+                      },
+                      {
+                          "id":  "int_000021",
+                          "level":  "intermediate",
+                          "answer":  "Training sessions helped employees avoid common errors.",
+                          "audio":  "audio/public/int_000021.ogg"
+                      },
+                      {
+                          "id":  "adv_000002",
+                          "level":  "advanced",
+                          "answer":  "Astronomers detected signals from an unusually dense star.",
+                          "audio":  "audio/public/adv_000002.ogg"
+                      },
+                      {
+                          "id":  "adv_000003",
+                          "level":  "advanced",
+                          "answer":  "Brand loyalty weakened when delivery delays became frequent.",
+                          "audio":  "audio/public/adv_000003.ogg"
+                      },
+                      {
+                          "id":  "adv_000004",
+                          "level":  "advanced",
+                          "answer":  "Brief mindfulness training improved attention during stressful tasks.",
+                          "audio":  "audio/public/adv_000004.ogg"
+                      },
+                      {
+                          "id":  "adv_000005",
+                          "level":  "advanced",
+                          "answer":  "Cloud providers expanded capacity amid rising AI demand.",
+                          "audio":  "audio/public/adv_000005.ogg"
+                      },
+                      {
+                          "id":  "adv_000006",
+                          "level":  "advanced",
+                          "answer":  "Coalition leaders struggled to pass the revised budget.",
+                          "audio":  "audio/public/adv_000006.ogg"
+                      },
+                      {
+                          "id":  "adv_000007",
+                          "level":  "advanced",
+                          "answer":  "Distant galaxies appeared brighter after calibration errors were corrected.",
+                          "audio":  "audio/public/adv_000007.ogg"
+                      },
+                      {
+                          "id":  "adv_000008",
+                          "level":  "advanced",
+                          "answer":  "Due to heavy rainfall, hillside soils became unstable.",
+                          "audio":  "audio/public/adv_000008.ogg"
+                      },
+                      {
+                          "id":  "adv_000009",
+                          "level":  "advanced",
+                          "answer":  "Earnings forecasts improved, lifting several semiconductor stocks.",
+                          "audio":  "audio/public/adv_000009.ogg"
+                      },
+                      {
+                          "id":  "adv_000010",
+                          "level":  "advanced",
+                          "answer":  "Gene therapy trials showed promise in rare disorders.",
+                          "audio":  "audio/public/adv_000010.ogg"
+                      },
+                      {
+                          "id":  "adv_000011",
+                          "level":  "advanced",
+                          "answer":  "It is believed that methane leaks accelerated regional warming.",
+                          "audio":  "audio/public/adv_000011.ogg"
+                      },
+                      {
+                          "id":  "adv_000012",
+                          "level":  "advanced",
+                          "answer":  "Monetary authorities may postpone easing amid stubborn inflation.",
+                          "audio":  "audio/public/adv_000012.ogg"
+                      },
+                      {
+                          "id":  "adv_000013",
+                          "level":  "advanced",
+                          "answer":  "New algorithms reduced errors in medical image analysis.",
+                          "audio":  "audio/public/adv_000013.ogg"
+                      },
+                      {
+                          "id":  "adv_000014",
+                          "level":  "advanced",
+                          "answer":  "Port congestion pushed shipping costs above seasonal averages.",
+                          "audio":  "audio/public/adv_000014.ogg"
+                      },
+                      {
+                          "id":  "adv_000015",
+                          "level":  "advanced",
+                          "answer":  "Public trust declined after several reports contradicted official statements.",
+                          "audio":  "audio/public/adv_000015.ogg"
+                      },
+                      {
+                          "id":  "adv_000016",
+                          "level":  "advanced",
+                          "answer":  "Researchers identified proteins linked to immune resistance.",
+                          "audio":  "audio/public/adv_000016.ogg"
+                      },
+                      {
+                          "id":  "adv_000017",
+                          "level":  "advanced",
+                          "answer":  "Rumor has it that antitrust regulators may defer the acquisition.",
+                          "audio":  "audio/public/adv_000017.ogg"
+                      },
+                      {
+                          "id":  "adv_000018",
+                          "level":  "advanced",
+                          "answer":  "Satellite images revealed fractures along the coastal fault.",
+                          "audio":  "audio/public/adv_000018.ogg"
+                      },
+                      {
+                          "id":  "adv_000019",
+                          "level":  "advanced",
+                          "answer":  "Sleep deprivation can distort emotional risk assessment.",
+                          "audio":  "audio/public/adv_000019.ogg"
+                      },
+                      {
+                          "id":  "adv_000020",
+                          "level":  "advanced",
+                          "answer":  "Subtle packaging revisions boosted repeat purchases significantly.",
+                          "audio":  "audio/public/adv_000020.ogg"
+                      },
+                      {
+                          "id":  "adv_000021",
+                          "level":  "advanced",
+                          "answer":  "Trade officials downgraded forecasts after export orders contracted.",
+                          "audio":  "audio/public/adv_000021.ogg"
+                      }
+                  ]
 }

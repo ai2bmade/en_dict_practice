@@ -59,6 +59,22 @@ Recommended conversion:
 ffmpeg -i "source.mp3" -map_metadata -1 -ac 1 -ar 24000 -c:a libopus -b:a 32k "bgn_000001.ogg"
 ```
 
+For this workspace, use the sync script after placing MP3 files under `G:\Codex\en_dict_practice_audio\source_mp3`:
+
+```powershell
+.\scripts\sync-audio.ps1
+```
+
+The script writes:
+
+```text
+audio/public/*.ogg
+content/sentences.json
+content/audio_manifest.csv
+```
+
+Always inspect `content/audio_manifest.csv` to verify that each public audio ID matches the correct answer.
+
 ## Coolify
 
 Use the GitHub repository:
