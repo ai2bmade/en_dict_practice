@@ -1,5 +1,6 @@
 param(
   [string]$SourceRoot = "G:\Codex\en_dict_practice_audio\source_mp3",
+  [string]$MirrorPublicOgg = "G:\Codex\en_dict_practice_audio\public_ogg",
   [string]$WorkspaceRoot = "C:\Users\pytho\Documents\Codex\2026-05-30\en_dict_practice",
   [string]$FfmpegPath = "G:\Codex\tools\ffmpeg\ffmpeg-8.1.1-essentials_build\bin\ffmpeg.exe"
 )
@@ -14,6 +15,7 @@ $audioPublic = Join-Path $WorkspaceRoot "audio\public"
 $contentPath = Join-Path $WorkspaceRoot "content\sentences.json"
 $manifestPath = Join-Path $WorkspaceRoot "content\audio_manifest.csv"
 New-Item -ItemType Directory -Force -Path $audioPublic | Out-Null
+New-Item -ItemType Directory -Force -Path $MirrorPublicOgg | Out-Null
 New-Item -ItemType Directory -Force -Path (Split-Path $manifestPath) | Out-Null
 
 function Convert-ToPublicOgg {
@@ -150,7 +152,11 @@ $content = [ordered]@{
 
 $content | ConvertTo-Json -Depth 5 | Set-Content -Path $contentPath -Encoding UTF8
 $manifest | Export-Csv -Path $manifestPath -NoTypeInformation -Encoding UTF8
+Get-ChildItem -File $audioPublic -Filter "*.ogg" | ForEach-Object {
+  Copy-Item -LiteralPath $_.FullName -Destination $MirrorPublicOgg -Force
+}
 
 Write-Host "Synced $($samples.Count) samples and $($sentences.Count) practice sentences."
 Write-Host "Wrote $contentPath"
 Write-Host "Wrote $manifestPath"
+Write-Host "Mirrored OGG files to $MirrorPublicOgg"
