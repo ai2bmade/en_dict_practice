@@ -104,6 +104,7 @@ async function showStart(chatId) {
       "English Dictation Practice Bot",
       "",
       "Listen to a short sentence. Type exactly what you hear.",
+      "Capitalization and punctuation do not affect your score.",
       "",
       "Start with /level to hear sample sentences and choose your level."
     ].join("\n"),

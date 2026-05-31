@@ -4,6 +4,8 @@ Telegram bot for short English dictation practice.
 
 The bot sends a short audio sentence, receives the learner's typed answer, scores it with a deterministic word-based algorithm, and reveals the answer only when the learner asks for it.
 
+Capitalization and punctuation do not affect the score.
+
 ## Current Behavior
 
 - UI language: English
