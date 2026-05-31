@@ -1,10 +1,10 @@
 ﻿{
     "samples":  [
                     {
-            "id":  "bgn_000001",
-            "level":  "beginner",
-            "answer":  "The bus arrived early this morning.",
-            "audio":  "audio/public/bgn_000001.ogg"
+                        "id":  "bgn_000001",
+                        "level":  "beginner",
+                        "answer":  "The bus arrived early this morning.",
+                        "audio":  "audio/public/bgn_000001.ogg"
                     },
                     {
                         "id":  "int_000001",
