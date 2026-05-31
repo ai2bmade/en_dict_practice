@@ -218,7 +218,7 @@ async function revealAnswer(chatId) {
       "",
       ranking.perfect
         ? ranking.message
-        : `You ranked ${ranking.rank.toLocaleString("en-US")} out of ${ranking.total.toLocaleString("en-US")} learners today for this sentence.`
+        : `Your score is in the bottom ${ranking.rank.toLocaleString("en-US")} out of ${ranking.total.toLocaleString("en-US")} learners today for this sentence.`
     ].join("\n"),
     mainKeyboard()
   );

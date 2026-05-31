@@ -19,6 +19,8 @@ Capitalization and punctuation do not affect the score.
 Perfect. You ranked #1 for this sentence today.
 ```
 
+For scores below 100%, the bot shows a bottom-group ranking for that sentence.
+
 ## Environment Variables
 
 Only one variable is required.
