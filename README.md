@@ -38,10 +38,10 @@ Optional paid-plan variables:
 
 ```env
 BUY_ME_A_COFFEE_URL=https://www.buymeacoffee.com/your-page
-PAID_CHAT_IDS=123456789,987654321
+ACTIVE_CHAT_IDS=123456789,987654321
 ```
 
-The bot does not verify Buy Me a Coffee payments automatically yet. After a learner pays, add their Telegram chat ID to `PAID_CHAT_IDS` and redeploy.
+The bot does not verify Buy Me a Coffee payments automatically yet. Add the teacher, family members, or paid learners to `ACTIVE_CHAT_IDS` and redeploy to remove daily limits for those Telegram accounts. Learners can send `/id` to see their Telegram chat ID. `PAID_CHAT_IDS` is still supported as a legacy alias.
 
 ## Audio Files
 
@@ -128,6 +128,7 @@ Environment variable:
 
 ```env
 TELEGRAM_BOT_TOKEN=BotFather token
+ACTIVE_CHAT_IDS=teacher-chat-id,wife-chat-id,paid-learner-chat-id
 ```
 
 This is a Telegram long polling worker. No HTTP port or domain is required.

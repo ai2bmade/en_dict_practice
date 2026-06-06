@@ -18,12 +18,8 @@ const content = JSON.parse(
 const apiBase = `https://api.telegram.org/bot${token}`;
 const sessions = new Map();
 const buyMeACoffeeUrl = process.env.BUY_ME_A_COFFEE_URL ?? "";
-const paidChatIds = new Set(
-  (process.env.PAID_CHAT_IDS ?? "")
-    .split(",")
-    .map((value) => value.trim())
-    .filter(Boolean)
-);
+const defaultActiveChatIds = ["8718262327", "8758266972"];
+const activeChatIds = parseChatIdList(defaultActiveChatIds, process.env.ACTIVE_CHAT_IDS, process.env.PAID_CHAT_IDS);
 const freeDailyLimits = {
   dictation: 1,
   listening: 1
@@ -174,7 +170,8 @@ async function showStart(chatId) {
       "Free plan: 1 listening practice and 1 dictation practice per day.",
       "Coffee plan: $5 for one month of practice.",
       "",
-      "Press Listening Practice if you want an easier warm-up."
+      "Press Listening Practice if you want an easier warm-up.",
+      "Send /id if you need your Telegram ID for activation."
     ].join("\n"),
     mainKeyboard()
   );
@@ -354,7 +351,21 @@ async function sendStatus(chatId) {
       `Level: ${session.level ? capitalize(session.level) : "Not selected"}`,
       `Completed: ${session.completedIds.size}`,
       `Average score: ${averageScoreText(session)}`,
-      `Today: ${todayUsageText(chatId, session)}`
+      `Today: ${todayUsageText(chatId, session)}`,
+      `Telegram ID: ${chatId}`
+    ].join("\n"),
+    mainKeyboard()
+  );
+}
+
+async function sendTelegramId(chatId) {
+  await sendMessage(
+    chatId,
+    [
+      "Your Telegram ID",
+      String(chatId),
+      "",
+      "If this ID is added to ACTIVE_CHAT_IDS, daily limits will be removed for this account."
     ].join("\n"),
     mainKeyboard()
   );
@@ -428,6 +439,11 @@ async function handleMessage(message) {
 
   if (command === "/status" || text === "Status") {
     await sendStatus(chatId);
+    return;
+  }
+
+  if (command === "/id" || command === "/myid") {
+    await sendTelegramId(chatId);
     return;
   }
 
@@ -534,7 +550,7 @@ function resetDailyUsageIfNeeded(session) {
 }
 
 function isPaid(chatId) {
-  return paidChatIds.has(String(chatId));
+  return activeChatIds.has(String(chatId));
 }
 
 function canStartPractice(chatId, session, type) {
@@ -551,9 +567,19 @@ function markDailyUsed(session, type) {
 function todayUsageText(chatId, session) {
   resetDailyUsageIfNeeded(session);
   if (isPaid(chatId)) {
-    return "Coffee plan active";
+    return "Active plan - unlimited practice";
   }
   return `Dictation ${session.daily.dictation}/${freeDailyLimits.dictation}, Listening ${session.daily.listening}/${freeDailyLimits.listening}`;
+}
+
+function parseChatIdList(...values) {
+  return new Set(
+    values
+      .filter(Boolean)
+      .flatMap((value) => String(value).split(/[\s,]+/))
+      .map((value) => value.trim())
+      .filter(Boolean)
+  );
 }
 
 function formatListeningText(item) {
