@@ -21,8 +21,8 @@ const buyMeACoffeeUrl = process.env.BUY_ME_A_COFFEE_URL ?? "";
 const defaultActiveChatIds = ["8718262327", "8758266972"];
 const activeChatIds = parseChatIdList(defaultActiveChatIds, process.env.ACTIVE_CHAT_IDS, process.env.PAID_CHAT_IDS);
 const freeDailyLimits = {
-  dictation: 1,
-  listening: 1
+  dictation: 3,
+  listening: 2
 };
 
 function getSession(chatId) {
@@ -167,7 +167,7 @@ async function showStart(chatId) {
       "2. Dictation Practice",
       "Listen to one sentence, type what you hear, and get an instant score.",
       "",
-      "Free plan: 1 listening practice and 1 dictation practice per day.",
+      "Free plan: 2 listening practices and 3 dictation practices per day.",
       "Coffee plan: $5 for one month of practice.",
       "",
       "Press Listening Practice if you want an easier warm-up.",
@@ -375,9 +375,9 @@ async function sendUpgradePrompt(chatId, type) {
   const session = getSession(chatId);
   session.upgradeContext = type;
   const label = type === "dictation" ? "dictation" : "listening practice";
-  const tomorrowText = "No problem. If you choose No, you can practice again tomorrow: 1 dictation and 1 listening practice.";
+  const tomorrowText = "No problem. If you choose No, you can practice again tomorrow: 2 listening practices and 3 dictation practices.";
   const lines = [
-    `Free learners can do 1 ${label} per day.`,
+    `You have used today's free ${label} practices.`,
     "",
     "Buy me a Coffee for $5 to practice for one month.",
     tomorrowText
@@ -454,7 +454,7 @@ async function handleMessage(message) {
 
   if (text === "No") {
     getSession(chatId).upgradeContext = null;
-    await sendMessage(chatId, "Okay. You can practice again tomorrow: 1 dictation and 1 listening practice.", mainKeyboard());
+    await sendMessage(chatId, "Okay. You can practice again tomorrow: 2 listening practices and 3 dictation practices.", mainKeyboard());
     return;
   }
 

@@ -12,7 +12,7 @@ Capitalization and punctuation do not affect the score.
 - Level samples: Beginner, Intermediate, Advanced
 - Practice: short one-sentence dictation
 - Listening practice: pre-beginner expanded sentence audio with visible text
-- Free plan: 1 dictation and 1 listening practice per day
+- Free plan: 3 dictation practices and 2 listening practices per day
 - Coffee plan: $5 for one month of practice
 - `Try Again`: replay current audio
 - `Answer`: reveal answer, show ranking, mark sentence complete
