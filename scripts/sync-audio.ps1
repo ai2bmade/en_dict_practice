@@ -71,6 +71,7 @@ $sampleDefinitions = @(
 
 $samples = New-Object System.Collections.Generic.List[object]
 $sentences = New-Object System.Collections.Generic.List[object]
+$listening = New-Object System.Collections.Generic.List[object]
 $manifest = New-Object System.Collections.Generic.List[object]
 
 foreach ($sample in $sampleDefinitions) {
@@ -113,8 +114,8 @@ foreach ($level in $levels) {
   }
 
   $files = Get-ChildItem -File $levelPath -Filter "*.mp3" | Sort-Object Name
-  if ($files.Count -ne 20) {
-    throw "Expected 20 MP3 files in $levelPath, found $($files.Count)."
+  if ($files.Count -eq 0) {
+    throw "Expected at least 1 MP3 file in $levelPath."
   }
 
   $index = 2
@@ -145,9 +146,51 @@ foreach ($level in $levels) {
   }
 }
 
+$listeningPath = Join-Path $SourceRoot "listening"
+if (Test-Path -LiteralPath $listeningPath) {
+  $files = Get-ChildItem -File $listeningPath -Filter "*.mp3" | Sort-Object Name
+  $index = 1
+
+  foreach ($file in $files) {
+    $textPath = [System.IO.Path]::ChangeExtension($file.FullName, ".txt")
+    if (-not (Test-Path -LiteralPath $textPath)) {
+      throw "Missing listening text file: $textPath"
+    }
+
+    $lines = @(Get-Content -LiteralPath $textPath -Encoding UTF8 | Where-Object { $_.Trim().Length -gt 0 })
+    if ($lines.Count -eq 0) {
+      throw "Listening text file is empty: $textPath"
+    }
+
+    $id = "lst_{0:D6}" -f $index
+    $outputName = "$id.ogg"
+    $outputPath = Join-Path $audioPublic $outputName
+    Convert-ToPublicOgg -InputPath $file.FullName -OutputPath $outputPath
+
+    $listening.Add([ordered]@{
+      id = $id
+      title = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+      lines = $lines
+      audio = "audio/public/$outputName"
+    })
+
+    $manifest.Add([pscustomobject]@{
+      id = $id
+      type = "listening"
+      level = "pre_beginner"
+      answer = ($lines -join " | ")
+      source_file = $file.FullName
+      public_file = $outputPath
+    })
+
+    $index += 1
+  }
+}
+
 $content = [ordered]@{
   samples = $samples
   sentences = $sentences
+  listening = $listening
 }
 
 $content | ConvertTo-Json -Depth 5 | Set-Content -Path $contentPath -Encoding UTF8
@@ -156,7 +199,7 @@ Get-ChildItem -File $audioPublic -Filter "*.ogg" | ForEach-Object {
   Copy-Item -LiteralPath $_.FullName -Destination $MirrorPublicOgg -Force
 }
 
-Write-Host "Synced $($samples.Count) samples and $($sentences.Count) practice sentences."
+Write-Host "Synced $($samples.Count) samples, $($sentences.Count) practice sentences, and $($listening.Count) listening practices."
 Write-Host "Wrote $contentPath"
 Write-Host "Wrote $manifestPath"
 Write-Host "Mirrored OGG files to $MirrorPublicOgg"

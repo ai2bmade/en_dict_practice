@@ -11,6 +11,9 @@ Capitalization and punctuation do not affect the score.
 - UI language: English
 - Level samples: Beginner, Intermediate, Advanced
 - Practice: short one-sentence dictation
+- Listening practice: pre-beginner expanded sentence audio with visible text
+- Free plan: 1 dictation and 1 listening practice per day
+- Coffee plan: $5 for one month of practice
 - `Try Again`: replay current audio
 - `Answer`: reveal answer, show ranking, mark sentence complete
 - 100% score: automatically complete sentence and show:
@@ -30,6 +33,15 @@ TELEGRAM_BOT_TOKEN=BotFather token
 ```
 
 No OpenAI key is required for learner-facing use.
+
+Optional paid-plan variables:
+
+```env
+BUY_ME_A_COFFEE_URL=https://www.buymeacoffee.com/your-page
+PAID_CHAT_IDS=123456789,987654321
+```
+
+The bot does not verify Buy Me a Coffee payments automatically yet. After a learner pays, add their Telegram chat ID to `PAID_CHAT_IDS` and redeploy.
 
 ## Audio Files
 
@@ -65,6 +77,31 @@ For this workspace, use the sync script after placing MP3 files under `G:\Codex\
 
 ```powershell
 .\scripts\sync-audio.ps1
+```
+
+Expected source folders:
+
+```text
+source_mp3\samples
+source_mp3\beginner
+source_mp3\intermediate
+source_mp3\advanced
+source_mp3\listening
+```
+
+For listening practice, put an MP3 and a TXT file with the same base name:
+
+```text
+source_mp3\listening\be.mp3
+source_mp3\listening\be.txt
+```
+
+The TXT file contains the visible expanded sentences, one line per sentence:
+
+```text
+It is good.
+It is good today.
+The food is good today.
 ```
 
 The script writes:

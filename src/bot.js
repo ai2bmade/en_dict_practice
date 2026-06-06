@@ -17,6 +17,17 @@ const content = JSON.parse(
 );
 const apiBase = `https://api.telegram.org/bot${token}`;
 const sessions = new Map();
+const buyMeACoffeeUrl = process.env.BUY_ME_A_COFFEE_URL ?? "";
+const paidChatIds = new Set(
+  (process.env.PAID_CHAT_IDS ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
+);
+const freeDailyLimits = {
+  dictation: 1,
+  listening: 1
+};
 
 function getSession(chatId) {
   if (!sessions.has(chatId)) {
@@ -26,8 +37,15 @@ function getSession(chatId) {
       pendingAnswer: null,
       lastScore: null,
       completedIds: new Set(),
+      completedListeningIds: new Set(),
       completedScores: [],
-      freeUsed: 0
+      currentListening: null,
+      daily: {
+        date: todayKey(),
+        dictation: 0,
+        listening: 0
+      },
+      upgradeContext: null
     });
   }
   return sessions.get(chatId);
@@ -103,14 +121,53 @@ async function sendAudioForSentence(chatId, sentence) {
   }
 }
 
+async function sendAudioForContent(chatId, item, titlePrefix = "Sentence") {
+  const audioPath = join(rootDir, item.audio);
+  const label = item.id.toUpperCase().replace("_", "-");
+
+  if (!existsSync(audioPath)) {
+    await sendMessage(
+      chatId,
+      [
+        `${titlePrefix} ${escapeHtml(label)}`,
+        "",
+        "Audio file is not uploaded yet.",
+        `Expected file: ${escapeHtml(item.audio)}`
+      ].join("\n")
+    );
+    return;
+  }
+
+  const audioBytes = readFileSync(audioPath);
+  const isMp3 = item.audio.toLowerCase().endsWith(".mp3");
+  const extension = isMp3 ? "mp3" : "ogg";
+  const contentType = isMp3 ? "audio/mpeg" : "audio/ogg";
+  const form = new FormData();
+  form.append("chat_id", String(chatId));
+  form.append("title", `${titlePrefix} ${label}`);
+  form.append("audio", new Blob([audioBytes], { type: contentType }), `${item.id}.${extension}`);
+
+  const response = await fetch(`${apiBase}/sendAudio`, {
+    method: "POST",
+    body: form
+  });
+  const data = await response.json();
+  if (!data.ok) {
+    throw new Error(`sendAudio failed: ${data.description}`);
+  }
+}
+
 async function showStart(chatId) {
   await sendMessage(
     chatId,
     [
       "English Dictation Practice Bot",
       "",
-      "Listen to a short sentence. Type exactly what you hear.",
+      "Listen to short English audio and practice dictation.",
       "Capitalization and punctuation do not affect your score.",
+      "",
+      "Free plan: 1 dictation and 1 listening practice per day.",
+      "Coffee plan: $5 for one month of practice.",
       "",
       "Start with /level to hear sample sentences and choose your level."
     ].join("\n"),
@@ -143,6 +200,11 @@ async function chooseLevel(chatId, level) {
 
 async function sendNextSentence(chatId) {
   const session = getSession(chatId);
+  if (!canStartPractice(chatId, session, "dictation")) {
+    await sendUpgradePrompt(chatId, "dictation");
+    return;
+  }
+
   const level = session.level ?? "beginner";
   const pool = content.sentences.filter((item) => item.level === level && !session.completedIds.has(item.id));
   const candidates = pool.length > 0 ? pool : content.sentences.filter((item) => !session.completedIds.has(item.id));
@@ -154,17 +216,60 @@ async function sendNextSentence(chatId) {
 
   const sentence = candidates[Math.floor(Math.random() * candidates.length)];
   session.current = sentence;
+  session.currentListening = null;
   session.pendingAnswer = null;
   session.lastScore = null;
+  markDailyUsed(session, "dictation");
 
   await sendMessage(chatId, `Sentence ${sentence.id.toUpperCase().replace("_", "-")}`, answerKeyboard());
   await sendAudioForSentence(chatId, sentence);
 }
 
+async function sendNextListening(chatId) {
+  const session = getSession(chatId);
+  const listening = Array.isArray(content.listening) ? content.listening : [];
+
+  if (!canStartPractice(chatId, session, "listening")) {
+    await sendUpgradePrompt(chatId, "listening");
+    return;
+  }
+
+  const pool = listening.filter((item) => !session.completedListeningIds.has(item.id));
+  const candidates = pool.length > 0 ? pool : listening;
+
+  if (candidates.length === 0) {
+    await sendMessage(chatId, "No listening practice is available yet.", mainKeyboard());
+    return;
+  }
+
+  const item = candidates[Math.floor(Math.random() * candidates.length)];
+  session.current = null;
+  session.currentListening = item;
+  session.completedListeningIds.add(item.id);
+  markDailyUsed(session, "listening");
+
+  await sendMessage(
+    chatId,
+    [
+      `Listening Practice ${item.id.toUpperCase().replace("_", "-")}`,
+      "",
+      "Listen to the following sentence in an expanded form and practice several times while understanding the sentence structure.",
+      "",
+      escapeHtml(formatListeningText(item))
+    ].join("\n"),
+    listeningKeyboard()
+  );
+  await sendAudioForContent(chatId, item, "Listening Practice");
+}
+
 async function replay(chatId) {
   const session = getSession(chatId);
   if (!session.current) {
-    await sendMessage(chatId, "No active sentence. Use /dictation to start.", mainKeyboard());
+    if (session.currentListening) {
+      await sendAudioForContent(chatId, session.currentListening, "Listening Practice");
+      return;
+    }
+    await sendMessage(chatId, "No active audio. Use /dictation or /listening to start.", mainKeyboard());
     return;
   }
   await sendAudioForSentence(chatId, session.current);
@@ -173,6 +278,10 @@ async function replay(chatId) {
 async function handleSubmission(chatId, text) {
   const session = getSession(chatId);
   if (!session.current) {
+    if (session.currentListening) {
+      await sendMessage(chatId, "This is listening practice. Press Try Again to replay the audio, or Next Listening to continue.", listeningKeyboard());
+      return;
+    }
     await sendMessage(chatId, "No active sentence. Use /dictation to start.", mainKeyboard());
     return;
   }
@@ -238,10 +347,35 @@ async function sendStatus(chatId) {
       "Status",
       `Level: ${session.level ? capitalize(session.level) : "Not selected"}`,
       `Completed: ${session.completedIds.size}`,
-      `Average score: ${averageScoreText(session)}`
+      `Average score: ${averageScoreText(session)}`,
+      `Today: ${todayUsageText(chatId, session)}`
     ].join("\n"),
     mainKeyboard()
   );
+}
+
+async function sendUpgradePrompt(chatId, type) {
+  const session = getSession(chatId);
+  session.upgradeContext = type;
+  const label = type === "dictation" ? "dictation" : "listening practice";
+  const tomorrowText = "No problem. If you choose No, you can practice again tomorrow: 1 dictation and 1 listening practice.";
+  const lines = [
+    `Free learners can do 1 ${label} per day.`,
+    "",
+    "Buy me a Coffee for $5 to practice for one month.",
+    tomorrowText
+  ];
+
+  const extra = buyMeACoffeeUrl
+    ? {
+        reply_markup: {
+          inline_keyboard: [[{ text: "Buy me a Coffee ($5)", url: buyMeACoffeeUrl }]]
+        }
+      }
+    : mainKeyboard();
+
+  await sendMessage(chatId, lines.join("\n"), extra);
+  await sendMessage(chatId, "After buying, send your Telegram chat ID to the teacher. Choose No if you want to continue tomorrow.", upgradeKeyboard());
 }
 
 async function handleMessage(message) {
@@ -271,6 +405,11 @@ async function handleMessage(message) {
     return;
   }
 
+  if (command === "/listening" || text === "Listening" || text === "Next Listening") {
+    await sendNextListening(chatId);
+    return;
+  }
+
   if (command === "/replay" || text === "Try Again") {
     await replay(chatId);
     return;
@@ -286,6 +425,17 @@ async function handleMessage(message) {
     return;
   }
 
+  if (command === "/coffee" || text === "Buy me a Coffee") {
+    await sendUpgradePrompt(chatId, "dictation");
+    return;
+  }
+
+  if (text === "No") {
+    getSession(chatId).upgradeContext = null;
+    await sendMessage(chatId, "Okay. You can practice again tomorrow: 1 dictation and 1 listening practice.", mainKeyboard());
+    return;
+  }
+
   if (command === "/reset") {
     sessions.delete(chatId);
     await sendMessage(chatId, "Your session has been reset.", mainKeyboard());
@@ -298,7 +448,7 @@ async function handleMessage(message) {
 function mainKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["Next Sentence", "Try Again"], ["Answer", "Status"], ["Change Level"]],
+      keyboard: [["Next Sentence", "Listening"], ["Try Again", "Answer"], ["Status", "Change Level"]],
       resize_keyboard: true
     }
   };
@@ -322,6 +472,24 @@ function levelKeyboard() {
   };
 }
 
+function listeningKeyboard() {
+  return {
+    reply_markup: {
+      keyboard: [["Try Again", "Next Listening"], ["Next Sentence", "Status"], ["Buy me a Coffee"]],
+      resize_keyboard: true
+    }
+  };
+}
+
+function upgradeKeyboard() {
+  return {
+    reply_markup: {
+      keyboard: [["Buy me a Coffee", "No"], ["Status"]],
+      resize_keyboard: true
+    }
+  };
+}
+
 function capitalize(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
@@ -337,6 +505,56 @@ function averageScoreText(session) {
 
   const total = session.completedScores.reduce((sum, score) => sum + score, 0);
   return `${Math.round(total / session.completedScores.length)}%`;
+}
+
+function todayKey() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(new Date());
+}
+
+function resetDailyUsageIfNeeded(session) {
+  const currentDate = todayKey();
+  if (session.daily.date !== currentDate) {
+    session.daily = {
+      date: currentDate,
+      dictation: 0,
+      listening: 0
+    };
+  }
+}
+
+function isPaid(chatId) {
+  return paidChatIds.has(String(chatId));
+}
+
+function canStartPractice(chatId, session, type) {
+  resetDailyUsageIfNeeded(session);
+  if (isPaid(chatId)) return true;
+  return session.daily[type] < freeDailyLimits[type];
+}
+
+function markDailyUsed(session, type) {
+  resetDailyUsageIfNeeded(session);
+  session.daily[type] += 1;
+}
+
+function todayUsageText(chatId, session) {
+  resetDailyUsageIfNeeded(session);
+  if (isPaid(chatId)) {
+    return "Coffee plan active";
+  }
+  return `Dictation ${session.daily.dictation}/${freeDailyLimits.dictation}, Listening ${session.daily.listening}/${freeDailyLimits.listening}`;
+}
+
+function formatListeningText(item) {
+  if (Array.isArray(item.lines)) {
+    return item.lines.join("\n");
+  }
+  return item.text ?? "";
 }
 
 async function poll(offset) {
@@ -364,7 +582,8 @@ async function poll(offset) {
 }
 
 async function main() {
-  console.log(`English dictation bot started with ${content.sentences.length} practice sentences.`);
+  const listeningCount = Array.isArray(content.listening) ? content.listening.length : 0;
+  console.log(`English dictation bot started with ${content.sentences.length} practice sentences and ${listeningCount} listening practices.`);
   let offset = 0;
 
   while (true) {
