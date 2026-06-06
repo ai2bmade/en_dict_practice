@@ -157,7 +157,11 @@ if (Test-Path -LiteralPath $listeningPath) {
       throw "Missing listening text file: $textPath"
     }
 
-    $lines = @(Get-Content -LiteralPath $textPath -Encoding UTF8 | Where-Object { $_.Trim().Length -gt 0 })
+    $lines = @(
+      Get-Content -LiteralPath $textPath -Encoding UTF8 |
+        ForEach-Object { $_.ToString().Trim() } |
+        Where-Object { $_.Length -gt 0 }
+    )
     if ($lines.Count -eq 0) {
       throw "Listening text file is empty: $textPath"
     }

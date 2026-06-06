@@ -163,20 +163,25 @@ async function showStart(chatId) {
     [
       "English Dictation Practice Bot",
       "",
-      "Listen to short English audio and practice dictation.",
-      "Capitalization and punctuation do not affect your score.",
+      "What would you like to do first?",
       "",
-      "Free plan: 1 dictation and 1 listening practice per day.",
+      "1. Listening Practice",
+      "If dictation feels too difficult, start here. You can read the expanded sentences while listening several times.",
+      "",
+      "2. Dictation Practice",
+      "Listen to one sentence, type what you hear, and get an instant score.",
+      "",
+      "Free plan: 1 listening practice and 1 dictation practice per day.",
       "Coffee plan: $5 for one month of practice.",
       "",
-      "Start with /level to hear sample sentences and choose your level."
+      "Press Listening Practice if you want an easier warm-up."
     ].join("\n"),
     mainKeyboard()
   );
 }
 
 async function showLevelSamples(chatId) {
-  await sendMessage(chatId, "Listen to the three samples, then choose your level.", levelKeyboard());
+  await sendMessage(chatId, "Choose your dictation level. Listen to the samples first if you want.", levelKeyboard());
   for (const sample of content.samples) {
     await sendMessage(chatId, `${levelNumber(sample.level)}. ${capitalize(sample.level)} sample`);
     await sendAudioForSentence(chatId, sample);
@@ -253,7 +258,8 @@ async function sendNextListening(chatId) {
     [
       `Listening Practice ${item.id.toUpperCase().replace("_", "-")}`,
       "",
-      "Listen to the following sentence in an expanded form and practice several times while understanding the sentence structure.",
+      "Read the sentences below while listening to the audio.",
+      "Listen several times and notice how the sentence grows step by step.",
       "",
       escapeHtml(formatListeningText(item))
     ].join("\n"),
@@ -269,7 +275,7 @@ async function replay(chatId) {
       await sendAudioForContent(chatId, session.currentListening, "Listening Practice");
       return;
     }
-    await sendMessage(chatId, "No active audio. Use /dictation or /listening to start.", mainKeyboard());
+    await sendMessage(chatId, "No active audio. Press Listening Practice or Dictation Practice to start.", mainKeyboard());
     return;
   }
   await sendAudioForSentence(chatId, session.current);
@@ -279,7 +285,7 @@ async function handleSubmission(chatId, text) {
   const session = getSession(chatId);
   if (!session.current) {
     if (session.currentListening) {
-      await sendMessage(chatId, "This is listening practice. Press Try Again to replay the audio, or Next Listening to continue.", listeningKeyboard());
+      await sendMessage(chatId, "This is listening practice. Press Repeat Audio to replay, or Next Listening Practice to continue.", listeningKeyboard());
       return;
     }
     await sendMessage(chatId, "No active sentence. Use /dictation to start.", mainKeyboard());
@@ -391,7 +397,7 @@ async function handleMessage(message) {
     return;
   }
 
-  if (command === "/level" || text === "Change Level") {
+  if (command === "/level" || text === "Choose Level" || text === "Change Level") {
     await showLevelSamples(chatId);
     return;
   }
@@ -400,17 +406,17 @@ async function handleMessage(message) {
   if (text === "2" || text === "2. Intermediate" || text === "Intermediate") return chooseLevel(chatId, "intermediate");
   if (text === "3" || text === "3. Advanced" || text === "Advanced") return chooseLevel(chatId, "advanced");
 
-  if (command === "/dictation" || command === "/today" || text === "Next Sentence") {
+  if (command === "/dictation" || command === "/today" || text === "Dictation Practice" || text === "Next Dictation") {
     await sendNextSentence(chatId);
     return;
   }
 
-  if (command === "/listening" || text === "Listening" || text === "Next Listening") {
+  if (command === "/listening" || text === "Listening" || text === "Listening Practice" || text === "Next Listening" || text === "Next Listening Practice") {
     await sendNextListening(chatId);
     return;
   }
 
-  if (command === "/replay" || text === "Try Again") {
+  if (command === "/replay" || text === "Try Again" || text === "Repeat Audio") {
     await replay(chatId);
     return;
   }
@@ -425,7 +431,7 @@ async function handleMessage(message) {
     return;
   }
 
-  if (command === "/coffee" || text === "Buy me a Coffee") {
+  if (command === "/coffee" || text === "Buy Coffee" || text === "Buy me a Coffee") {
     await sendUpgradePrompt(chatId, "dictation");
     return;
   }
@@ -448,7 +454,7 @@ async function handleMessage(message) {
 function mainKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["Next Sentence", "Listening"], ["Try Again", "Answer"], ["Status", "Change Level"]],
+      keyboard: [["Listening Practice"], ["Dictation Practice"], ["Choose Level", "Status"]],
       resize_keyboard: true
     }
   };
@@ -457,7 +463,7 @@ function mainKeyboard() {
 function answerKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["Try Again", "Answer"], ["Next Sentence", "Status"], ["Change Level"]],
+      keyboard: [["Repeat Audio", "Answer"], ["Next Dictation", "Status"], ["Listening Practice", "Choose Level"]],
       resize_keyboard: true
     }
   };
@@ -466,7 +472,7 @@ function answerKeyboard() {
 function levelKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["1. Beginner"], ["2. Intermediate"], ["3. Advanced"], ["Status"]],
+      keyboard: [["1. Beginner"], ["2. Intermediate"], ["3. Advanced"], ["Listening Practice", "Status"]],
       resize_keyboard: true
     }
   };
@@ -475,7 +481,7 @@ function levelKeyboard() {
 function listeningKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["Try Again", "Next Listening"], ["Next Sentence", "Status"], ["Buy me a Coffee"]],
+      keyboard: [["Repeat Audio", "Next Listening Practice"], ["Dictation Practice", "Status"], ["Buy Coffee"]],
       resize_keyboard: true
     }
   };
@@ -484,7 +490,7 @@ function listeningKeyboard() {
 function upgradeKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["Buy me a Coffee", "No"], ["Status"]],
+      keyboard: [["Buy Coffee", "No"], ["Status"]],
       resize_keyboard: true
     }
   };
@@ -552,7 +558,7 @@ function todayUsageText(chatId, session) {
 
 function formatListeningText(item) {
   if (Array.isArray(item.lines)) {
-    return item.lines.join("\n");
+    return item.lines.map((line) => (typeof line === "string" ? line : line.value ?? "")).filter(Boolean).join("\n");
   }
   return item.text ?? "";
 }
