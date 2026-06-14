@@ -9,6 +9,7 @@ Capitalization and punctuation do not affect the score.
 ## Current Behavior
 
 - UI language: English
+- Dictation levels: Zero Level, Beginner, Intermediate, Advanced
 - Level samples: Beginner, Intermediate, Advanced
 - Practice: short one-sentence dictation
 - Listening practice: pre-beginner expanded sentence audio with visible text
@@ -83,6 +84,7 @@ Expected source folders:
 
 ```text
 source_mp3\samples
+source_mp3\zero_level
 source_mp3\beginner
 source_mp3\intermediate
 source_mp3\advanced

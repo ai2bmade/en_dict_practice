@@ -166,6 +166,7 @@ async function showStart(chatId) {
       "",
       "2. Dictation Practice",
       "Listen to one sentence, type what you hear, and get an instant score.",
+      "If Beginner feels too difficult, choose Zero Level first.",
       "",
       "Free plan: 2 listening practices and 3 dictation practices per day.",
       "Coffee plan: $5 for one month of practice.",
@@ -178,12 +179,12 @@ async function showStart(chatId) {
 }
 
 async function showLevelSamples(chatId) {
-  await sendMessage(chatId, "Choose your dictation level. Listen to the samples first if you want.", levelKeyboard());
+  await sendMessage(chatId, "Choose your dictation level. If Beginner feels too difficult, choose 0. Zero Level.", levelKeyboard());
   for (const sample of content.samples) {
     await sendMessage(chatId, `${levelNumber(sample.level)}. ${capitalize(sample.level)} sample`);
     await sendAudioForSentence(chatId, sample);
   }
-  await sendMessage(chatId, "Choose your level. Send 1, 2, or 3.", levelKeyboard());
+  await sendMessage(chatId, "Choose your level. Send 0, 1, 2, or 3.", levelKeyboard());
 }
 
 async function chooseLevel(chatId, level) {
@@ -192,8 +193,8 @@ async function chooseLevel(chatId, level) {
   await sendMessage(
     chatId,
     [
-      `Great. Your level is set to ${capitalize(level)}.`,
-      `We are going to practice ${capitalize(level)} level sentences.`
+      `Great. Your level is set to ${levelLabel(level)}.`,
+      `We are going to practice ${levelLabel(level)} sentences.`
     ].join("\n"),
     mainKeyboard()
   );
@@ -207,7 +208,7 @@ async function sendNextSentence(chatId) {
     return;
   }
 
-  const level = session.level ?? "beginner";
+  const level = session.level ?? "zero_level";
   const pool = content.sentences.filter((item) => item.level === level && !session.completedIds.has(item.id));
   const candidates = pool.length > 0 ? pool : content.sentences.filter((item) => !session.completedIds.has(item.id));
 
@@ -348,7 +349,7 @@ async function sendStatus(chatId) {
     chatId,
     [
       "Status",
-      `Level: ${session.level ? capitalize(session.level) : "Not selected"}`,
+      `Level: ${session.level ? levelLabel(session.level) : "Not selected"}`,
       `Completed: ${session.completedIds.size}`,
       `Average score: ${averageScoreText(session)}`,
       `Today: ${todayUsageText(chatId, session)}`,
@@ -413,6 +414,7 @@ async function handleMessage(message) {
     return;
   }
 
+  if (text === "0" || text === "0. Zero Level" || text === "Zero Level" || text === "Zero_Level") return chooseLevel(chatId, "zero_level");
   if (text === "1" || text === "1. Beginner" || text === "Beginner") return chooseLevel(chatId, "beginner");
   if (text === "2" || text === "2. Intermediate" || text === "Intermediate") return chooseLevel(chatId, "intermediate");
   if (text === "3" || text === "3. Advanced" || text === "Advanced") return chooseLevel(chatId, "advanced");
@@ -488,7 +490,7 @@ function answerKeyboard() {
 function levelKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["1. Beginner"], ["2. Intermediate"], ["3. Advanced"], ["Listening Practice", "Status"]],
+      keyboard: [["0. Zero Level"], ["1. Beginner"], ["2. Intermediate"], ["3. Advanced"], ["Listening Practice", "Status"]],
       resize_keyboard: true
     }
   };
@@ -517,7 +519,16 @@ function capitalize(value) {
 }
 
 function levelNumber(level) {
-  return { beginner: 1, intermediate: 2, advanced: 3 }[level] ?? "";
+  return { zero_level: 0, beginner: 1, intermediate: 2, advanced: 3 }[level] ?? "";
+}
+
+function levelLabel(level) {
+  return {
+    zero_level: "Zero Level",
+    beginner: "Beginner level",
+    intermediate: "Intermediate level",
+    advanced: "Advanced level"
+  }[level] ?? capitalize(level);
 }
 
 function averageScoreText(session) {

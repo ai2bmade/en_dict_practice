@@ -102,9 +102,10 @@ foreach ($sample in $sampleDefinitions) {
 }
 
 $levels = @(
-  @{ Name = "beginner"; Prefix = "bgn" },
-  @{ Name = "intermediate"; Prefix = "int" },
-  @{ Name = "advanced"; Prefix = "adv" }
+  @{ Name = "zero_level"; Prefix = "zro"; StartIndex = 1 },
+  @{ Name = "beginner"; Prefix = "bgn"; StartIndex = 2 },
+  @{ Name = "intermediate"; Prefix = "int"; StartIndex = 2 },
+  @{ Name = "advanced"; Prefix = "adv"; StartIndex = 2 }
 )
 
 foreach ($level in $levels) {
@@ -118,7 +119,7 @@ foreach ($level in $levels) {
     throw "Expected at least 1 MP3 file in $levelPath."
   }
 
-  $index = 2
+  $index = $level.StartIndex
   foreach ($file in $files) {
     $id = "{0}_{1:D6}" -f $level.Prefix, $index
     $answer = Get-AnswerFromFile -File $file

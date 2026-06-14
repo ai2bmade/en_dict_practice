@@ -21,6 +21,66 @@
                 ],
     "sentences":  [
                       {
+                          "id":  "zro_000001",
+                          "level":  "zero_level",
+                          "answer":  "Everything seems fine today at work so far.",
+                          "audio":  "audio/public/zro_000001.ogg"
+                      },
+                      {
+                          "id":  "zro_000002",
+                          "level":  "zero_level",
+                          "answer":  "I feel tired today.",
+                          "audio":  "audio/public/zro_000002.ogg"
+                      },
+                      {
+                          "id":  "zro_000003",
+                          "level":  "zero_level",
+                          "answer":  "It appears normal.",
+                          "audio":  "audio/public/zro_000003.ogg"
+                      },
+                      {
+                          "id":  "zro_000004",
+                          "level":  "zero_level",
+                          "answer":  "It smells really nice.",
+                          "audio":  "audio/public/zro_000004.ogg"
+                      },
+                      {
+                          "id":  "zro_000005",
+                          "level":  "zero_level",
+                          "answer":  "It sounds great.",
+                          "audio":  "audio/public/zro_000005.ogg"
+                      },
+                      {
+                          "id":  "zro_000006",
+                          "level":  "zero_level",
+                          "answer":  "Many people stay healthy this winter by exercising regularly.",
+                          "audio":  "audio/public/zro_000006.ogg"
+                      },
+                      {
+                          "id":  "zro_000007",
+                          "level":  "zero_level",
+                          "answer":  "Please remain calm during the flight.",
+                          "audio":  "audio/public/zro_000007.ogg"
+                      },
+                      {
+                          "id":  "zro_000008",
+                          "level":  "zero_level",
+                          "answer":  "The food is good today.",
+                          "audio":  "audio/public/zro_000008.ogg"
+                      },
+                      {
+                          "id":  "zro_000009",
+                          "level":  "zero_level",
+                          "answer":  "The picture looks good on my phone.",
+                          "audio":  "audio/public/zro_000009.ogg"
+                      },
+                      {
+                          "id":  "zro_000010",
+                          "level":  "zero_level",
+                          "answer":  "The soup tastes really good.",
+                          "audio":  "audio/public/zro_000010.ogg"
+                      },
+                      {
                           "id":  "bgn_000002",
                           "level":  "beginner",
                           "answer":  "A delivery driver missed the entrance.",
