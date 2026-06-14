@@ -179,9 +179,26 @@ async function showStart(chatId) {
 }
 
 async function showLevelSamples(chatId) {
-  await sendMessage(chatId, "Choose your dictation level. If Beginner feels too difficult, choose 0. Zero Level.", levelKeyboard());
-  for (const sample of content.samples) {
-    await sendMessage(chatId, `${levelNumber(sample.level)}. ${capitalize(sample.level)} sample`);
+  const zeroSample = content.sentences.find((sentence) => sentence.level === "zero_level");
+  const samples = zeroSample ? [zeroSample, ...content.samples] : content.samples;
+
+  await sendMessage(
+    chatId,
+    [
+      "Choose your dictation level.",
+      "",
+      "0. Zero Level - easiest and slowest",
+      "1. Beginner",
+      "2. Intermediate",
+      "3. Advanced",
+      "",
+      "Listen to the samples below, then choose 0, 1, 2, or 3."
+    ].join("\n"),
+    levelKeyboard()
+  );
+
+  for (const sample of samples) {
+    await sendMessage(chatId, `${levelNumber(sample.level)}. ${levelLabel(sample.level)} sample`);
     await sendAudioForSentence(chatId, sample);
   }
   await sendMessage(chatId, "Choose your level. Send 0, 1, 2, or 3.", levelKeyboard());
